@@ -12,8 +12,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 
-// mongodb 연결(로컬호스트로 연결 추후 클라우드로 연결)
-mongoose.connect("mongodb://localhost:27017/todolistDB",{ useNewUrlParser: true });
+// mongodb 연결(Cluster)
+// 비밀번호는 생략함
+mongoose.connect("mongodb+srv://admin-gys:<password>@cluster0.5msgo.mongodb.net/todolistDB",{ useNewUrlParser: true });
 
 
 // create Schema
@@ -62,13 +63,33 @@ app.get('/', function (req, res) {
   });
 });
 
-// 오늘은 여기까지 post작성
+
+// Create
 
 app.post('/', function (req, res) {
-  console.log(req.body.newItem);
-  res.redirect('/');
+  const listName = req.body.list;
+  const post = new WorkItem({
+    content: req.body.newItem
+  });
+  if (listName === "To Do List") {
+    post.save();
+    res.redirect('/');  
+  }
 });
 
+// Delete
+
+app.post('/delete', function (req, res) {
+  const checkedItemId = req.body.checkbox;
+  WorkItem.findByIdAndRemove(checkedItemId, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Successfully delete Item");
+      res.redirect('/');
+    }
+  });
+});
 
 app.listen(3000, function () {
   console.log("Server Started on port 3000");
