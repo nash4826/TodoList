@@ -1,0 +1,25 @@
+<%- include("header") -%>
+
+    <div class="box" id="heading">
+      <h1><%= Title %></h1>
+    </div>
+    <div class="box">
+      
+      <!-- 추가 -->
+      <form class="item" action="/" method="post">
+        <input type="text" name="newItem" placeholder="추가하세요" autocomplete="off">
+        <button type="sumbit" name="list">+</button>
+      </form>
+      
+      <!-- Todolist 현황과 삭제 -->
+      <% listItems.forEach((item)=> { %>
+      <form action="/delete" method="post">
+        <div class="item">
+          <input type="checkbox" name="checkbox" >
+          <p><%= item.content %></p>
+        </div>
+      </form>
+      <% }); %>
+      
+    </div>
+<%- include("footer") -%>
